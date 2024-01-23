@@ -1,63 +1,29 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
+using System.Text;
 
-namespace MyApi
+namespace ConsoleApp
 {
-    public class Startup
+    class Program
     {
-        public void ConfigureServices(IServiceCollection services)
+        static void Main()
         {
-            // Konfigurera tjänster här
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+
+            Console.WriteLine("Tryck på Enter för att utföra åtgärden.");
+            Console.ReadLine();
+
+            Knapp();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        static void Knapp()
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            Console.WriteLine("Åtgärnden utförs...");
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Tryck på Enter för att utföra åtgärden.");
-                    // Simulera att användaren trycker på Enter
-                    Console.ReadLine();
-                    await Knapp(context);
-                });
-            });
-        }
-
-        private async Task Knapp(HttpContext context)
-        {
-            await context.Response.WriteAsync("Åtgärden utförs...\n");
-
-            await context.Response.WriteAsync("Ange ditt namn:");
+            Console.WriteLine("Ange ditt namn:");
             string userName = Console.ReadLine();
 
-            await context.Response.WriteAsync($"Hej {userName}! Logiken är nu utförd.");
+            Console.WriteLine($"Hej {userName}! Logiken är nu utförd.");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }
