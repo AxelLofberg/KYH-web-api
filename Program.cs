@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-
-
 namespace GuessingGameApi
 {
     public class Startup
@@ -32,23 +30,20 @@ namespace GuessingGameApi
                     await context.Response.WriteAsync("Välkommen till Gissningsspel API!");
                 });
 
+                int? secretNumber = null;
+
                 endpoints.MapPost("/start", async context =>
                 {
                     // Skapa ett slumpmässigt tal mellan 1 och 100
                     Random random = new Random();
-                    int secretNumber = random.Next(1, 101);
+                    secretNumber = random.Next(1, 101);
 
-                    // Spara det slumpmässiga talet i sessionen
-                    context.Session.SetInt32("SecretNumber", secretNumber);
-
-                    await context.Response.WriteAsync("Gissningsspelet har startat. Gissa ett tal mellan 1 och 100.");
+                    // Svara med det slumpmässiga talet
+                    await context.Response.WriteAsync(secretNumber.ToString());
                 });
 
                 endpoints.MapPost("/guess", async context =>
                 {
-                    // Hämta det slumpmässiga talet från sessionen
-                    int? secretNumber = context.Session.GetInt32("SecretNumber");
-
                     if (secretNumber.HasValue)
                     {
                         string requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
